@@ -1,0 +1,40 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: 
+      - main
+      - staging
+      - development
+  pull_request:
+    branches: 
+      - main
+      - staging
+      - development
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight
+
+jobs:
+  analyze:
+    name: Analyze code with CodeQL
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'typescript' ] # Supports both JavaScript and TypeScript
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
